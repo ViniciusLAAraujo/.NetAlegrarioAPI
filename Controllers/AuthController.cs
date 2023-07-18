@@ -53,7 +53,7 @@ namespace APIFinalTouch.Controllers
                         Password = userForRegistration.Password,
 
                     };
-                    if (_authHelper.SetPasswaord(useForSetPassword))
+                    if (_authHelper.SetPassword(useForSetPassword))
                     {
                         User userComplete = _mapper.Map<User>(userForRegistration);
                         userComplete.Active = true;
@@ -73,15 +73,23 @@ namespace APIFinalTouch.Controllers
             throw new Exception ("Passwords don't match!");
         }
 
-        //TODO The way it is you can change the password of any email or create logins not tied to any user, fix it
         [HttpPut("ResetPassword")]
         public IActionResult ResetPassword (UserForLoginDto useForSetPassword)
         {
-            if (_authHelper.SetPasswaord(useForSetPassword))
+
+            string sql = "SELECT [Email] FROM AlegrarioAppSchema.Users WHERE UserId = " + this.User.FindFirst("userId")?.Value;
+            string crrtUserEmail = _dapper.LoadDataSingle<string>(sql);
+            if (crrtUserEmail == useForSetPassword.Email)
+            {
+                
+            if (_authHelper.SetPassword(useForSetPassword))
             {
                 return Ok();
             }
             throw new Exception("Falied to reset password!");
+
+            }
+            throw new Exception("You are not allowed to change password of other users!");
         }
 
         [AllowAnonymous]
@@ -106,7 +114,7 @@ namespace APIFinalTouch.Controllers
                 }
             }
 
-            //01
+            
             string userIdSql = @"SELECT [UserId]
             FROM AlegrarioAppSchema.Users WHERE Email = '"+userForLogin.Email+"'";
 
@@ -116,11 +124,11 @@ namespace APIFinalTouch.Controllers
                 {"token", _authHelper.CreateToken(userId)}
             });
         }
-        //TODO Make SP to recieve either UserId or Email and return Id in 01 and 02
+        
         [HttpGet("RefreshToken")]
         public string RefreshToken()
         {
-            //02
+            
             string userIdSql = @"SELECT [UserId]
             FROM AlegrarioAppSchema.Users WHERE UserId = '"+User.FindFirst("userId")?.Value+"'";
 

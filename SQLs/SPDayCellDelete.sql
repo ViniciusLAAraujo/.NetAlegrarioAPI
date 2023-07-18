@@ -7,6 +7,10 @@ CREATE OR ALTER PROCEDURE AlegrarioAppSchema.spDayCell_Delete
     @CellDay DATE
 AS
 BEGIN
+    DELETE FROM AlegrarioAppSchema.Emotions
+        WHERE UserId = @UserId 
+        AND CellDay = @CellDay
+        
     DELETE FROM AlegrarioAppSchema.DayCells
         WHERE UserId = @UserId 
         AND CellDay = @CellDay

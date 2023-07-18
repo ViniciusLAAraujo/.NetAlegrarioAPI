@@ -76,7 +76,7 @@ namespace DotNetAlegrarioAPI.Helpers
             return tokenHandler.WriteToken(token);
         }
 
-        public bool SetPasswaord(UserForLoginDto userToSetPassword)
+        public bool SetPassword(UserForLoginDto userToSetPassword)
         {
             byte[] passwordSalt = new byte[128/8];
             using(RandomNumberGenerator rng = RandomNumberGenerator.Create())

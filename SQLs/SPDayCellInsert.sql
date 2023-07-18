@@ -4,7 +4,7 @@ GO
 
 
 CREATE OR ALTER PROCEDURE AlegrarioAppSchema.spDayCell_Insert
-/*EXEC AlegrarioAppSchema.spDayCell_Insert @UserId = 3, @CellDay = '2023-07-24' */
+/*EXEC AlegrarioAppSchema.spDayCell_Insert @UserId = 3, @CellDay = '2023-09-01' */
     @UserId INT
     , @CellDay DATE
 AS
