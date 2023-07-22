@@ -27,23 +27,8 @@ The Alegrario App is a Swift-conceived application developed during the Hackatru
 <a href="#" target="_blank" rel="noreferrer">  <img src="https://www.aracruz.es.leg.br/imagens/f2ea1ded4d037633f687ee389a571086logotipodoconedoyoutubebyvexels.png/image" alt="youtube" width="50" height="50"/> AlegrarioAPI <img src="https://salesforceprofs.com/wp-content/uploads/2019/12/api_rest.png" alt="restapi" width="80" height="60" /></a>
 
 
-
-
 <h3>Screens</h3>
-<div style="display: flex; align-items: flex-end;">
-  <div style="flex: 25%; padding: 5px;">
-    <img alt="AlegrarioCalendar" src="https://github.com/ViniciusLAAraujo/.NetAlegrarioAPI/assets/90988825/a8e5e5de-0f0e-4d5d-b4d5-a166a97cebae" style="width: 100%; border: 1px solid #ccc; width: 100%; height: 450px">
-  </div>
-  <div style="flex: 25%; padding: 5px;">
-    <img src="https://github.com/ViniciusLAAraujo/.NetAlegrarioAPI/assets/90988825/fd7d166f-3ff5-4928-9f70-f934c9ab1120" alt="AlegrarioEmotion" style="width: 100%; border: 1px solid #ccc;width: 100%; height: 450px">
-  </div>
-  <div style="flex: 25%; padding: 5px;">
-    <img src="https://github.com/ViniciusLAAraujo/.NetAlegrarioAPI/assets/90988825/857604db-8758-4574-b651-eda2dd329b27" alt="AlegrarioWeek" style="width: 100%; border: 1px solid #ccc;width: 100%; height: 450px">
-  </div>
-  <div style="flex: 25%; padding: 5px;">
-    <img src="https://github.com/ViniciusLAAraujo/.NetAlegrarioAPI/assets/90988825/56e01bf9-b364-4a21-b6b5-10b8aecace61" alt="AlegrarioGraph" style="width: 100%; border: 1px solid #ccc; width: 100%; height: 450px">
-  </div>
-</div>
+<img src="https://github.com/ViniciusLAAraujo/.NetAlegrarioAPI/assets/90988825/482a1880-da9b-4608-b02f-a1eee239bf51" alt="alegrarioscreens"  height="450"/>
 
 <h3>PDF Onboards</h3>
 
@@ -60,17 +45,24 @@ The Alegrario App is a Swift-conceived application developed during the Hackatru
 
 - `/Auth/Register`:  <span style="color: yellow;">[POST]</span>
 
+Register User with password
+
 <h4>Request:</h4>
 
 ```json
 {
   "Email": "user@example.com",
   "Password": "password123",
-  "PasswordConfirm": "password123"
+  "PasswordConfirm": "password123",
+  "FirstName": "user",
+  "LastName": "user",
+  "Gender": "gender"
 }
 ```
 
 - `/Auth/Login`:  <span style="color: yellow;">[POST]</span>
+
+Login to registered user and receive a token for authentication 
 
 <h4>Request:</h4>
 
@@ -91,6 +83,8 @@ The Alegrario App is a Swift-conceived application developed during the Hackatru
 
 - `/Auth/RefreshToken`:  <span style="color: lightgreen;">[GET]</span>
 
+Receive new refreshed token (all tokens are valid for a day)
+
 <h4>Request:</h4>
 <p>Authorization: Bearer <span style="color: #0070cc; font-style: italic; font-weight: 600" >"your_access_token"</span></p>
 
@@ -101,6 +95,8 @@ The Alegrario App is a Swift-conceived application developed during the Hackatru
 ```
 
 - `/Auth/ResetPassword`:  <span style="color: lightblue;">[PUT]</span>
+
+Reset current user's password
 
 <h4>Request:</h4>
 <p>Authorization: Bearer <span style="color: #0070cc; font-style: italic; font-weight: 600" >"your_access_token"</span></p>
@@ -115,10 +111,14 @@ The Alegrario App is a Swift-conceived application developed during the Hackatru
 
 - `/User/GetUsers/{userId}/{isActive}`: <span style="color: lightgreen;">[GET]</span>
 
+Get users, filtering by id and activeness 
+
 <h4>Request:</h4>
 <p>Authorization: Bearer <span style="color: #0070cc; font-style: italic; font-weight: 600" >"your_access_token"</span>
 <br>
+<br>
 <span style = " color: #0070cc; ">userId</span> <span style = " color: lightblue;">[integer]</span>: Filter users by their ID. (0 = all users)
+<br>
 <br>
 <span style = " color: #0070cc; " > isActive </span> <span style = "color: lightblue;">[boolean]</span> : Filter active or inactive users. (false = inactive and active users ; true = only active users).</p>
 
@@ -143,6 +143,8 @@ The Alegrario App is a Swift-conceived application developed during the Hackatru
 
 - `/User/UpsertUser`: <span style="color: lightblue;">[PUT]</span>
 
+Update or Insert User
+
 <h4>Request:</h4>
 <p>Authorization: Bearer <span style="color: #0070cc; font-style: italic; font-weight: 600" >"your_access_token"</span></p>
 
@@ -158,8 +160,11 @@ The Alegrario App is a Swift-conceived application developed during the Hackatru
 
 - `/User/DeleteUser/{userId}`: <span style="color: red;">[DELETE]</span>
 
+Delete an user with the id passed thought url 
+
 <h4>Request:</h4>
 <p>Authorization: Bearer <span style="color: #0070cc; font-style: italic; font-weight: 600" >"your_access_token"</span>
+<br>
 <br>
 <span style = " color: #0070cc; ">userId</span> <span style = " color: lightblue;">[integer]</span>:  ID of the user to be deleted (Also delete realated daycells as well).</p>
 
@@ -167,10 +172,14 @@ The Alegrario App is a Swift-conceived application developed during the Hackatru
 
 - `/DayCell/GetDays/{Month}/{DateSearch}`: <span style="color: lightgreen;">[GET]</span>
 
+Receive DayCells of the current user, filtering by month or specific date 
+
 <h4>Request:</h4>
 <p>Authorization: Bearer <span style="color: #0070cc; font-style: italic; font-weight: 600" >"your_access_token"</span>
 <br>
+<br>
 <span style = " color: #0070cc; ">Month</span> <span style = " color: lightblue;">[integer]</span>: Filter the user's days by a specific month (1 to 12), Invalid <=0 or >12 returns current Month.
+<br>
 <br>
 <span style = " color: #0070cc; ">DateSearch</span> <span style = " color: lightblue;">[string, format: <span style= "color: orange;">"yyyy-MM-dd"</span>]</span> : Filter specific date, All user's days off given month = 1900-01-01.</p>
 
@@ -195,6 +204,8 @@ The Alegrario App is a Swift-conceived application developed during the Hackatru
 ```
 - `/DayCell/GetWeekDays`: <span style="color: lightgreen;">[GET]</span>
 
+Receive all DayCells of the current user in the current week
+
 <h4>Request:</h4>
 <p>Authorization: Bearer <span style="color: #0070cc; font-style: italic; font-weight: 600" >"your_access_token"</span></p>
 
@@ -212,7 +223,9 @@ The Alegrario App is a Swift-conceived application developed during the Hackatru
   }
 ]
 ```
-- `/DayCell/InsertDayCell`: [POST]
+- `/DayCell/InsertDayCell`: <span style="color: yellow;">[POST]</span>
+
+Insert a DayCell to the current user
 
 <h4>Request:</h4>
 <p>Authorization: Bearer <span style="color: #0070cc; font-style: italic; font-weight: 600" >"your_access_token"</span></p>
@@ -224,6 +237,8 @@ The Alegrario App is a Swift-conceived application developed during the Hackatru
 ```
 - `/DayCell/DeleteDay`: <span style="color: red;">[DELETE]</span>
 
+Delete DayCell and all related Emotions for a given date under the current user
+
 <h4>Request:</h4>
 <p>Authorization: Bearer <span style="color: #0070cc; font-style: italic; font-weight: 600" >"your_access_token"</span></p>
 
@@ -232,15 +247,20 @@ The Alegrario App is a Swift-conceived application developed during the Hackatru
   "CellDay": "2023-07-22"
 }
 ```
-- `/DayCell/GetEmotions/{Month}/{HourId}/{EmotionValue}/{DateSearch}`: [GET]
+- `/DayCell/GetEmotions/{Month}/{HourId}/{EmotionValue}/{DateSearch}`: <span style="color: lightgreen;">[GET]</span>
+
+Get Emotions of current user, filtering by month, hour, emotion value and date
 
 <h4>Request:</h4>
 <p>Authorization: Bearer <span style="color: #0070cc; font-style: italic; font-weight: 600" >"your_access_token"</span>
 <br>
+<br>
 <span style = " color: #0070cc; ">Month</span> <span style = " color: lightblue;">[integer]</span>: Filter the user's emotions by a specific month (1 to 12), Invalid <=0 or >12 returns all user's emotions from all months.
 HourId [integer]: Filter the user's emotions by a specific hour (0 to 23), Invalid <0 or >23 returns all user's emotions from all hours.
 <br>
+<br>
 <span style = " color: #0070cc; ">EmotionValue</span> <span style = " color: lightblue;">[integer]</span>:  Filter the user's emotions by a specific emotion value (1 to 4), Invalid <1 or >4 returns all user's emotions from all values.
+<br>
 <br>
 <span style = " color: #0070cc; ">DateSearch</span> <span style = " color: lightblue;">[string, format: <span style= "color: orange;">"yyyy-MM-dd"</span>]</span> : Filter specific user's emotions on a given date, All user's emotions off a given date = 1900-01-01.</p>
 
@@ -267,7 +287,9 @@ HourId [integer]: Filter the user's emotions by a specific hour (0 to 23), Inval
 ]
 ```
 
-- `/DayCell/UpsertEmotion`: [PUT]
+- `/DayCell/UpsertEmotion`: <span style="color: lightblue;">[PUT]</span>
+
+Update or insert an Emotion to the current User (if DayCell do not exists insert gets inserted as well)
 
 <h4>Request:</h4>
 <p>Authorization: Bearer <span style="color: #0070cc; font-style: italic; font-weight: 600" >"your_access_token"</span></p>
@@ -283,12 +305,17 @@ HourId [integer]: Filter the user's emotions by a specific hour (0 to 23), Inval
 ```
 - `/DayCell/GetEmotionsStats/{DateSearch}/{EmotionValue}/{IncludeAllEmotions}`: <span style="color: lightgreen;">[GET]</span>
 
+Receive Emotion statistics for a given User's DayCell (Sum Emotions, Get every stat separated or Stat for a single Emotion value) 
+
 <h4>Request:</h4>
 <p>Authorization: Bearer <span style="color: #0070cc; font-style: italic; font-weight: 600" >"your_access_token"</span>
 <br>
+<br>
 <span style = " color: #0070cc; ">DateSearch</span> <span style = " color: lightblue;">[string, format: <span style= "color: orange;">"yyyy-MM-dd"</span>]</span> : Filter specific user's emotions statistics on a given date, Invalid date = 1900-01-01.
 <br>
+<br>
 <span style = " color: #0070cc; ">EmotionValue</span> <span style = " color: lightblue;">[integer]</span>:  Filter the user's emotions statistics by a specific emotion value (1 to 4), Invalid <1 or >4 returns all user's emotions statistics from all values combined.
+<br>
 <br>
 <span style = " color: #0070cc; ">IncludeAllEmotions</span> <span style = " color: lightblue;">[boolean]</span>: When true return a separate emotion statistics for every give emotions in the user's day.</p>
 
@@ -323,6 +350,8 @@ HourId [integer]: Filter the user's emotions by a specific hour (0 to 23), Inval
 ]
 ```
 - `/DayCell/DeleteEmotion`: <span style="color: red;">[DELETE]</span>
+
+Delete Emotion for the current User
 
 <h4>Request:</h4>
 <p>Authorization: Bearer <span style="color: #0070cc; font-style: italic; font-weight: 600" >"your_access_token"</span></p>
