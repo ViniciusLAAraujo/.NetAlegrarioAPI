@@ -5,6 +5,7 @@ using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DotNetAlegrarioAPI.Dtos;
+using System.Globalization;
 
 namespace DotNetAlegrarioAPI.Controllers;
 
@@ -163,12 +164,14 @@ public class DayCellController : ControllerBase
     //public IEnumerable<Emotion> GetEmotionsStats(int userId = 0,  string DateSerach = "1900-01-01", int EmotionValue = 0 , bool IncludeAllEmotions = false)
     public IEnumerable<EmotionStatToReceiveDto> GetEmotionsStats(  string DateSerach = "1900-01-01", int EmotionValue = 0 ,bool IncludeAllEmotions = false)
     {
-        string sql = @"EXEC AlegrarioAppSchema.spDayCell_GetEmotionStats @UserId = @UserIdParam";
+        string sql = @"EXEC AlegrarioAppSchema.spDayCell_GetEmotionStats @UserId = @UserIdParam
+        , @CellDay = @CellDayParam ";
 
         DynamicParameters  sqlParameters = new DynamicParameters();
         string stringParameters = "";
         //sqlParameters.Add("@UserIdParam",userId, DbType.Int32);
         sqlParameters.Add("@UserIdParam",this.User.FindFirst("userId")?.Value, DbType.Int32);
+        sqlParameters.Add("@CellDayParam",DateSerach, DbType.Date);
 
         if (IncludeAllEmotions)
         {
@@ -182,10 +185,9 @@ public class DayCellController : ControllerBase
                 sqlParameters.Add("@EmotionValueParam",EmotionValue, DbType.Int32);
             }
         }
-        if (DateSerach != "1900-01-01")
+        if (DateTime.Parse(DateSerach,CultureInfo.InvariantCulture) <=  DateTime.Parse("1900-01-01",CultureInfo.InvariantCulture))
         {
-            stringParameters += ", @CellDay = @CellDayParam ";
-            sqlParameters.Add("@CellDayParam",DateSerach, DbType.Date);
+             throw new Exception("Not a valid date!");
         }
         if (stringParameters.Length > 0)
         {
