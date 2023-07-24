@@ -22,12 +22,6 @@ public class UserController : ControllerBase
         _reusabelSql = new ReusableSql(config);
     }
     
-    [AllowAnonymous]
-    [HttpGet("TestConnection")]
-    public DateTime TestConnection()
-    {
-        return _dapper.LoadDataSingle<DateTime>("SELECT GETDATE()");
-    }
 
     [HttpGet("GetUsers/{userId}/{isActive}")]
 
