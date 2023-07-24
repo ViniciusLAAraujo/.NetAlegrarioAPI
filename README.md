@@ -22,9 +22,11 @@ The Alegrario App is a Swift-conceived application developed during the Hackatru
 
 <h3>Alegrario V 0.5</h3>
 
+<a href="https://youtu.be/xM1O68MHtfE" target="_blank" rel="noreferrer">  <img src="https://www.aracruz.es.leg.br/imagens/f2ea1ded4d037633f687ee389a571086logotipodoconedoyoutubebyvexels.png/image" alt="youtube" width="50" height="50"/> AlegrarioAPIAzure <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/azure/azure-original.svg" alt="restapi" width="55" height="50" /></a>
+
 <a href="https://www.youtube.com/shorts/NAxOm4rwqWE" target="_blank" rel="noreferrer">  <img src="https://www.aracruz.es.leg.br/imagens/f2ea1ded4d037633f687ee389a571086logotipodoconedoyoutubebyvexels.png/image" alt="youtube" width="50" height="50"/> Alegrario v0.5 short <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Circle-icons-smartphone.svg/1024px-Circle-icons-smartphone.svg.png" alt="smartphone" width="50" height="50" /></a>
 
-<a href="#" target="_blank" rel="noreferrer">  <img src="https://www.aracruz.es.leg.br/imagens/f2ea1ded4d037633f687ee389a571086logotipodoconedoyoutubebyvexels.png/image" alt="youtube" width="50" height="50"/> AlegrarioAPI <img src="https://salesforceprofs.com/wp-content/uploads/2019/12/api_rest.png" alt="restapi" width="80" height="60" /></a>
+<a href="https://youtu.be/5B1gxYhTq3o" target="_blank" rel="noreferrer">  <img src="https://www.aracruz.es.leg.br/imagens/f2ea1ded4d037633f687ee389a571086logotipodoconedoyoutubebyvexels.png/image" alt="youtube" width="50" height="50"/> AlegrarioAPILocal <img src="https://salesforceprofs.com/wp-content/uploads/2019/12/api_rest.png" alt="restapi" width="80" height="60" /></a>
 
 
 <h3>Screens</h3>
@@ -38,6 +40,126 @@ The Alegrario App is a Swift-conceived application developed during the Hackatru
 
 
 ## How to use
+
+First ensure you have installed .Net SDK:
+
+- [.NET SDK](https://dotnet.microsoft.com/download) 
+
+
+Install Azure Data Studio && MS SQL Server:
+
+-  [AzureDataStudio](https://learn.microsoft.com/en-us/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver16)
+- [MSSQL](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
+
+* [Linux](https://docs.docker.com/desktop/install/linux-install/) or [macOS](https://docs.docker.com/desktop/install/mac-install/) use Docker to install by:
+
+```bash
+docker run -e "ACCEPT_EULA=1" -e "MSSQL_USER=sa" -e "MSSQL_SA_PASSWORD=SQLConnect" -e "MSSQL_PID=Developer" -p 1433:1433 -d --name=sql_connect mcr.microsoft.com/azure-sql-edge
+```
+
+
+After cloning the project restore for packages:
+
+```bash
+dotnet restore
+```
+
+- Configuring Connection String:
+
+Inside appsettings.json
+
+**Local**
+
+Windows
+```json
+ "DefaultConnection": "Server=localhost; Database=Alegrario; Trusted_Connection=true; TrustServerCertificate=true"
+```
+
+Linux or macOS (acording to user and password created early)
+```json
+"DefaultConnection":"Server=localhost;Database=Alegrario;TrustServerCertificate=true;Trusted_Connection=false;User Id=sa;Password=SQLConnect;"
+```
+**Deployed to Azure example**
+
+```json
+"DefaultConnection": "Server=tcp:your_server,0000;Initial Catalog=yourDBName;Persist Security Info=False;User ID=youruser;Password=yourpassword;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+```
+
+- Configuring Password Generation and Token Strings:
+
+Inside appsettings.json make sure to provide you own PasswordKey and TokenKey
+
+```json
+"AppSettings": {
+    "PasswordKey": "Make_A_Strong_String_Key_For_Encription_Keep_It_Private",
+    "TokenKey": "Make_A_Strong_String_Key_For_Encription_Keep_It_Private"
+  }
+```
+- .NET 7.0
+
+Change the 6.0 to 7.0 comments in 
+
+**Authhelper.cs**
+
+```cs
+  string? tokenKeyString = _config.GetSection("AppSettings:TokenKey").Value;
+  
+  SymmetricSecurityKey tokenKey = new SymmetricSecurityKey(
+  Encoding.UTF8.GetBytes(
+  tokenKeyString != null ? tokenKeyString : ""
+  )
+  );
+```
+**Program.cs**
+
+```cs
+string? tokenKeyString = builder.Configuration.GetSection("AppSettings:Token").Value;
+ 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options => {
+  options.TokenValidationParameters = new TokenValidationParameters() 
+    {
+      ValidateIssuerSigningKey = true,
+      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+      tokenKeyString != null ? tokenKeyString : ""
+      )),
+      ValidateIssuer = false,
+      ValidateAudience = false
+    };
+  });
+```
+- Azure Deploy
+
+**Login to Azure:** Sign in to your Azure account using the Azure CLI or Azure portal.
+
+```bash
+az login
+```
+
+**Build the Project:** Before deploying, build the .NET project with the following command in the terminal or command prompt (inside project folder directory):
+
+```bash
+dotnet build --configuration Release
+```
+
+**Deploy to Azure:** Use the Azure CLI command az webapp up to deploy your application to Azure. Example:
+
+```bash
+az webapp up --sku F1 --name "AlegrarioAPI" --os-type linux
+```
+
+sku param = Service plan , name = Name of AppService, os-type = Environment the project will run
+
+- Create an Azure SQL Database:
+
+**Create SQL Server:** Use the Azure portal or Azure CLI to create an Azure SQL Server. This server will host your databases.
+
+**Create SQL Database:** Once the server is set up, create a new SQL Database within that server. You can define the database name, size, and other configurations.
+
+**Initialize SQL Database:** Run the SQLs inside the just-created Database. Schemas, Tables, and Stored Procedures.
+
+**Connection String:** Retrieve the connection string for your Azure SQL Database, as you'll need it in your .NET project to connect to the database.
+
 
 ## API Endpoints
 
